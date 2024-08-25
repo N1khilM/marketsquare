@@ -1,0 +1,36 @@
+{%extends 'base/base.html' %}{% load static%} {% load crispy_forms_tags %}
+{%block 'body' %}
+<div class="dashboard">
+  <h1>Quick Stats <b>BOSS!</b></h1>
+  <br />
+  <div class="dashboard-content">
+    <div class="dashboard-section">
+      <h2 style="color: black">Users</h2>
+      <ul>
+        <h2 style="color: black"></h2>
+        {% for user in Users%}
+        <li>{{user.username}}</li>
+        {%endfor%}{{location_form}}
+      </ul>
+
+      {% comment %}
+      <ul>
+        <li>Total Users: {{ Users }}</li>
+        <li>Total Listings: {{ total_listings }}</li>
+        <li>Total Locations: {{ total_locations }}</li>
+        <li>Total Liked Listings: {{ total_liked_listings }}</li>
+      </ul>
+      {% endcomment %}
+    </div>
+    <div class="dashboard-section">
+      <h2 style="color: black">Recent Listings</h2>
+      <ul>
+        {% for listing in recent_listings %}
+        <li>{{ listing.title }} - {{ listing.seller.user.username }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <!-- Add more sections as needed -->
+  </div>
+</div>
+{% endblock %}
