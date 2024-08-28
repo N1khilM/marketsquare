@@ -132,7 +132,7 @@ def inquire_listing_using_email(request, id):
         
         emailSubject = f'{request.user.username} is interested in {listing.model}'
         emailMessage = f'Hi {listing.seller.user.username}, {request.user.username} is interested in your {listing.model} listing on Marketsquare'
-        send_mail(emailSubject, emailMessage, 'nikhilkingh008@gmail.com',
+        send_mail(emailSubject, emailMessage, 'marketsquareteam@gmail.com',
                   [listing.seller.user.email, ], fail_silently=False)
         return JsonResponse({
             "success": True,
