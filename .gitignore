@@ -90,3 +90,6 @@ Desktop.ini
 # Windows temporary files
 *.tmp
 
+
+
+.env
