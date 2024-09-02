@@ -175,6 +175,7 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+
 # static
 STATIC_URL='/static/'
 STATICFILES_DIRS=[
