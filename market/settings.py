@@ -178,15 +178,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # static
 # Static files configuration
 
-# Root directory for static files
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# settings.py
+STATIC_URL = '/static/'  # URL prefix for static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Directory where collectstatic will store the files
 
-# URL prefix for static files
-STATIC_URL = '/static/'
-
-# Additional directories for static files
+# If you have additional static file directories, use this:
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # Note: changed from 'staticfiles' to 'static'
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 # Storage backend for static files
