@@ -184,7 +184,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Directory where collectst
 
 # If you have additional static file directories, use this:
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'marketsquare/static'),
 ]
 
 # Storage backend for static files
