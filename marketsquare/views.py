@@ -79,6 +79,13 @@ def edit_view(request, id):
         if listing is None:
             raise Exception
         if request.method == 'POST':
+
+            if 'delete' in request.POST:
+                listing.delete()
+                messages.success(request, f'Listing {id} deleted successfully!')
+                return redirect('home')
+
+
             listing_form = ListingForm(
                 request.POST, request.FILES, instance=listing)
             location_form = LocationForm(
