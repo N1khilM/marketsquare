@@ -21,14 +21,14 @@ from marketsquare.models import Listing, Location, LikedListing
 
 def adminpanel(request):
     # Gather data
-    total_users = User.objects.all()
+    total_users = User.objects.all()[::-1][:5]
     # total_listings = Listing.objects.all()
     # total_locations = Location.objects.all()
     # total_liked_listings = LikedListing.objects.all()
     location_form=LocationForm()
 
     # Get the most recent listings
-    recent_listings = Listing.objects.order_by('-created_at')[:5]
+    recent_listings = Listing.objects.order_by('-created_at')[::-1][:5]
 
     # Pass the data to the template
     context = {
