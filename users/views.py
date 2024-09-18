@@ -8,7 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.views import View
 
 from marketsquare.models import Listing, LikedListing
-from .forms import UserForm, ProfileForm, LocationForm
+from .forms import UserForm, ProfileForm, LocationForm 
+from .forms import CustomUserCreationForm  # Import the custom form
+
 
 
 def login_view(request):
@@ -46,21 +48,38 @@ class RegisterView(View):
     def get(self, request):
         if request.user.is_authenticated:
             return redirect('home')
-        register_form = UserCreationForm()
+        register_form = CustomUserCreationForm()  # Use the custom form here
         return render(request, 'views/register.html', {'register_form': register_form})
 
     def post(self, request):
-        register_form = UserCreationForm(request.POST)
+        register_form = CustomUserCreationForm(request.POST)  # Use the custom form here
         if register_form.is_valid():
             user = register_form.save()
-            user.refresh_from_db()
             login(request, user)
             messages.success(
                 request, f'User {user.username} registered successfully.')
             return redirect('home')
         else:
-            messages.error(request, f'An error occured trying to register.')
+            messages.error(request, f'An error occurred trying to register.')
             return render(request, 'views/register.html', {'register_form': register_form})
+    # def get(self, request):
+    #     if request.user.is_authenticated:
+    #         return redirect('home')
+    #     register_form = UserCreationForm()
+    #     return render(request, 'views/register.html', {'register_form': register_form})
+
+    # def post(self, request):
+    #     register_form = UserCreationForm(request.POST)
+    #     if register_form.is_valid():
+    #         user = register_form.save()
+    #         user.refresh_from_db()
+    #         login(request, user)
+    #         messages.success(
+    #             request, f'User {user.username} registered successfully.')
+    #         return redirect('home')
+    #     else:
+    #         messages.error(request, f'An error occured trying to register.')
+    #         return render(request, 'views/register.html', {'register_form': register_form})
 
 
 @method_decorator(login_required, name='dispatch')

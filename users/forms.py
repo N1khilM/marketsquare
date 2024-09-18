@@ -33,3 +33,24 @@ class LocationForm(forms.ModelForm):
         model = Location
         fields = {'address_1', 'address_2', 'city', 'state', 'zip_code'}
         
+
+# customuserform
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
+        help_texts = {
+            'username': 'Once set, your username cannot be changed.',
+        }
+
+    def save(self, commit=True):
+        user = super(CustomUserCreationForm, self).save(commit=False)
+        user.email = self.cleaned_data["email"]
+        if commit:
+            user.save()
+        return user
