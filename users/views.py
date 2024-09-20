@@ -9,7 +9,7 @@ from django.views import View
 
 from marketsquare.models import Listing, LikedListing
 from .forms import UserForm, ProfileForm, LocationForm 
-from .forms import CustomUserCreationForm  # Import the custom form
+from .forms import CustomUserCreationForm, OTPForm  # Import the custom form
 
 
 
@@ -42,6 +42,12 @@ def logout_view(request):
     logout(request)
     return redirect('main')
 
+from .utils import generate_otp
+from django.utils import timezone
+from datetime import timedelta
+from django.core.mail import send_mail
+from django.conf import settings
+from django.db import IntegrityError
 
 class RegisterView(View):
 
@@ -52,34 +58,99 @@ class RegisterView(View):
         return render(request, 'views/register.html', {'register_form': register_form})
 
     def post(self, request):
-        register_form = CustomUserCreationForm(request.POST)  # Use the custom form here
-        if register_form.is_valid():
-            user = register_form.save()
-            login(request, user)
-            messages.success(
-                request, f'User {user.username} registered successfully.')
-            return redirect('home')
-        else:
-            messages.error(request, f'An error occurred trying to register.')
-            return render(request, 'views/register.html', {'register_form': register_form})
-    # def get(self, request):
-    #     if request.user.is_authenticated:
-    #         return redirect('home')
-    #     register_form = UserCreationForm()
-    #     return render(request, 'views/register.html', {'register_form': register_form})
+        try:
+            register_form = CustomUserCreationForm(request.POST)  # Use the custom form here
+            if register_form.is_valid():
+                # Save user but don't activate yet
+                user = register_form.save(commit=False)
+                user.is_active = False
+                user.save()
 
-    # def post(self, request):
-    #     register_form = UserCreationForm(request.POST)
-    #     if register_form.is_valid():
-    #         user = register_form.save()
-    #         user.refresh_from_db()
-    #         login(request, user)
-    #         messages.success(
-    #             request, f'User {user.username} registered successfully.')
-    #         return redirect('home')
-    #     else:
-    #         messages.error(request, f'An error occured trying to register.')
-    #         return render(request, 'views/register.html', {'register_form': register_form})
+                # Generate and store OTP in session
+                otp = generate_otp()
+                request.session['otp'] = otp
+                request.session['user_id'] = user.id
+                request.session['otp_expiry'] = str(timezone.now() + timedelta(minutes=5))
+
+
+                # Send OTP via email
+                send_mail(
+                    '[MarketSquare] Your OTP for Registration',
+                    f"""
+    Hello {user.username},
+
+    Thank you for registering with MarketSquare. Your One-Time Password (OTP) for completing the registration is:
+
+    {otp}
+
+    Please use this OTP to complete your registration process. If you did not request this OTP, please ignore this email.
+
+    Best regards,
+    The MarketSquare Team
+    """,
+                    settings.EMAIL_HOST_USER,
+                    [user.email],
+                    fail_silently=False,
+                )
+
+                messages.success(request, 'OTP has been sent to your email.')
+                return redirect('verify_otp')  # Redirect to OTP verification page
+            else:
+                messages.error(request, 'Please correct the errors below.')
+        except IntegrityError:
+            messages.error(request, 'An error occurred. Please try again.')
+            
+        return render(request, 'views/register.html', {'register_form': register_form})
+    
+
+
+from django.contrib.auth.models import User
+    # OTP Verification View
+class OTPVerificationView(View):
+    def get(self, request):
+        form = OTPForm()
+        return render(request, 'views/verify_otp.html', {'form': form})
+
+    def post(self, request):
+        form = OTPForm(request.POST)
+        if form.is_valid():
+            entered_otp = form.cleaned_data['otp']
+            session_otp = request.session.get('otp')
+            user_id = request.session.get('user_id')
+            otp_expiry = request.session.get('otp_expiry')
+
+            if not session_otp or not user_id or not otp_expiry:
+                messages.error(request, 'OTP session has expired. Please register again.')
+                return redirect('register')
+
+            if timezone.now() > timezone.datetime.fromisoformat(otp_expiry):
+                messages.error(request, 'OTP has expired. Please try registering again.')
+                return redirect('register')
+
+            # Check if the OTP has expired
+            if timezone.now() > timezone.datetime.fromisoformat(otp_expiry):
+                user = User.objects.get(id=user_id)
+                if not user.is_active:
+                    user.delete()  # Delete the unverified user if OTP expired
+                messages.error(request, 'OTP has expired. Your registration has been canceled.')
+                return redirect('register')
+
+            if entered_otp == str(session_otp):
+                user = User.objects.get(id=user_id)
+                user.is_active = True
+                user.save()
+
+                # Clear the OTP session
+                del request.session['otp']
+                del request.session['user_id']
+                del request.session['otp_expiry']
+
+                login(request, user)
+                messages.success(request, 'Registration successful and OTP verified!')
+                return redirect('home')
+            else:
+                messages.error(request, 'Invalid OTP. Please try again.')
+        return render(request, 'views/verify_otp.html', {'form': form})
 
 
 @method_decorator(login_required, name='dispatch')

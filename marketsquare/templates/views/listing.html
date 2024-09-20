@@ -14,7 +14,7 @@
         />
       </div>
       <div class="col-lg-6">
-        <h1 class="display-5 fw-bold lh-1 mb-3">{{ listing.model }}</h1>
+        <h1 class="display-5 fw-bold lh-1 mb-3">{{ listing.title }}</h1>
         <p class="lead">
           {{ listing.seller.user.username }} - {{ listing.updated_at }}
         </p>
@@ -32,27 +32,36 @@
             <table class="table text-center">
               <tbody>
                 <tr>
+                  <th scope="row" class="text-start">Title</th>
+                  <td>{{listing.title|capfirst }}</td>
+                </tr>
+                <tr>
                   <th scope="row" class="text-start">Brand</th>
                   <td>{{listing.brand|capfirst }}</td>
                 </tr>
+
                 <tr>
-                  <th scope="row" class="text-start">model</th>
+                  <th scope="row" class="text-start">Model</th>
                   <td>{{listing.model }}</td>
                 </tr>
                 <tr>
-                  <th scope="row" class="text-start">weight</th>
-                  <td>{{listing.weight }} gm</td>
+                  <th scope="row" class="text-start">Stock</th>
+                  <td>{{listing.stock }}</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="text-start">Condition</th>
+                  <td>{{listing.condition }}</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="text-start">Category</th>
+                  <td>{{listing.category }}</td>
                 </tr>
                 <tr>
                   <th scope="row" class="text-start">Color</th>
                   <td>{{listing.color }}</td>
                 </tr>
                 <tr>
-                  <th scope="row" class="text-start">Size</th>
-                  <td>{{listing.dimensions }}</td>
-                </tr>
-                <tr>
-                  <th scope="row" class="text-start">price</th>
+                  <th scope="row" class="text-start">Price</th>
                   <td>Rs {{listing.price|capfirst }}</td>
                 </tr>
               </tbody>

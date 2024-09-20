@@ -37,6 +37,7 @@ class LocationForm(forms.ModelForm):
 # customuserform
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import ValidationError
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -48,9 +49,26 @@ class CustomUserCreationForm(UserCreationForm):
             'username': 'Once set, your username cannot be changed.',
         }
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        user = User.objects.filter(email=email).first()  # Check if user exists
+
+        if user:
+            if user.is_active:
+                # If the user is active, prevent registration
+                raise ValidationError("This email is already registered. Please try logging in.")
+            else:
+                user.delete()
+        else:
+            return email
+
     def save(self, commit=True):
         user = super(CustomUserCreationForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
         if commit:
             user.save()
         return user
+    
+# otp
+class OTPForm(forms.Form):
+    otp = forms.CharField(max_length=6, label="Enter the 6-digit OTP")
