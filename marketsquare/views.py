@@ -138,7 +138,12 @@ def inquire_listing_using_email(request, id):
     try:
         
         emailSubject = f'{request.user.username} is interested in {listing.model}'
-        emailMessage = f'Hi {listing.seller.user.username}, {request.user.username} is interested in your {listing.model} listing on Marketsquare'
+        emailMessage = (f'Dear {listing.seller.user.username},\n\n'
+                        f'We hope this message finds you well. We are pleased to inform you that {request.user.username} has expressed interest in your {listing.model} listing on Marketsquare.\n\n'
+                        f'They can be reached at {request.user.email}' + (f' or by phone at {request.user.profile.phone_number}' if request.user.profile.phone_number else '') + ' for further inquiries and communication regarding the listing.\n\n'
+                        f'Thank you for using Marketsquare, and we wish you success with your transaction.\n\n'
+                        f'Best regards,\n'
+                        f'The Marketsquare Team')
         send_mail(emailSubject, emailMessage, 'marketsquareteam@gmail.com',
                   [listing.seller.user.email, ], fail_silently=False)
         return JsonResponse({
