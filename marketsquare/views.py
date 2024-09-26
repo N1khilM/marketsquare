@@ -155,3 +155,8 @@ def inquire_listing_using_email(request, id):
             "success": False,
             "info": e,
             })
+
+
+# unauthorised admin
+def not_authorized(request):
+    return render(request, 'views/not_authorized.html')

@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.urls import path
 
-from .views import main_view, home_view, list_view, listing_view, edit_view, like_listing_view, inquire_listing_using_email
+from .views import main_view, home_view, list_view, listing_view, edit_view, like_listing_view, inquire_listing_using_email,not_authorized
 
 urlpatterns = [
     path('', main_view, name='main'),
@@ -14,3 +14,6 @@ urlpatterns = [
          inquire_listing_using_email, name='inquire_listing'),
 ]
 
+urlpatterns += [
+    path('not-authorized/', not_authorized, name='not_authorized'),
+]

@@ -1,0 +1,37 @@
+<!-- your_app/templates/not_authorized.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>403 Forbidden</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+      }
+      h1 {
+        color: #d9534f; /* Bootstrap danger color */
+      }
+      .button {
+        padding: 10px 20px;
+        font-size: 16px;
+        color: white;
+        background-color: #5cb85c; /* Bootstrap success color */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none; /* Remove underline */
+      }
+      .button:hover {
+        background-color: #4cae4c; /* Darker green on hover */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>403 Forbidden</h1>
+    <p>You do not have permission to access this page.</p>
+    <a href="{% url 'home' %}" class="button">Get Back to Homepage</a>
+  </body>
+</html>

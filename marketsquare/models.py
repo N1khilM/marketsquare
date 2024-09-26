@@ -13,6 +13,14 @@ class Listing(models.Model):
         ('new', 'New'),
         ('used', 'Used'),
     ]
+    CATEGORY_CHOICES = [
+        ('electronics', 'Electronics'),
+        ('clothing', 'Clothing'),
+        ('furniture', 'Furniture'),
+        ('accessories', 'Accessories'),
+        ('footwear', 'Footwear'),
+        ('others','Others'),
+    ]
     
     STATUS_CHOICES = [
         ('active', 'Active'),
@@ -44,7 +52,9 @@ class Listing(models.Model):
     
     stock = models.PositiveIntegerField(default=1)  # Stock quantity
     
-    category = models.CharField(max_length=50, null=True, blank=True)  # Optional category
+    # category = models.CharField(max_length=50,choices=CATEGORY_CHOICES, null=True, blank=True)  # Optional category
+    category = models.CharField(
+        max_length=50, choices=CATEGORY_CHOICES, null=True, blank=True) 
     
     status = models.CharField(
         max_length=15, choices=STATUS_CHOICES, default='active')  # Active, sold, or under review

@@ -7,67 +7,78 @@
       <div class="col-10 col-sm-8 col-lg-6">
         <img
           src="{{ listing.image.url }}"
-          class="d-block mx-lg-auto img-fluid"
-          width="1920"
-          height="1080"
+          class="d-block mx-lg-auto img-fluid rounded"
+          width="100%"
+          height="auto"
+          alt="{{ listing.title }}"
           loading="lazy"
         />
       </div>
       <div class="col-lg-6">
         <h1 class="display-5 fw-bold lh-1 mb-3">{{ listing.title }}</h1>
         <p class="lead">
-          {{ listing.seller.user.username }} - {{ listing.updated_at }}
+          {{ listing.seller.user.username }} - Updated on
+          {{listing.updated_at|date:"F d, Y" }}
         </p>
+        <p><strong>Status:</strong> {{ listing.status|capfirst }}</p>
       </div>
     </div>
   </section>
+
   <div class="bg-light">
     <div class="container px-4 py-5">
       <h2 class="mb-3 border-bottom" style="color: black">
         Product Information
       </h2>
-      <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+      <div class="row row-cols-1 row-cols-md-2 mb-3 text-center">
         <div class="col-lg-8">
           <div class="table-responsive">
-            <table class="table text-center">
+            <table class="table table-hover text-start">
               <tbody>
                 <tr>
-                  <th scope="row" class="text-start">Title</th>
-                  <td>{{listing.title|capfirst }}</td>
+                  <th scope="row">Title</th>
+                  <td>{{ listing.title|capfirst }}</td>
                 </tr>
                 <tr>
-                  <th scope="row" class="text-start">Brand</th>
-                  <td>{{listing.brand|capfirst }}</td>
-                </tr>
-
-                <tr>
-                  <th scope="row" class="text-start">Model</th>
-                  <td>{{listing.model }}</td>
+                  <th scope="row">Brand</th>
+                  <td>{{ listing.brand|default:"N/A" }}</td>
                 </tr>
                 <tr>
-                  <th scope="row" class="text-start">Stock</th>
-                  <td>{{listing.stock }}</td>
+                  <th scope="row">Model</th>
+                  <td>{{ listing.model }}</td>
                 </tr>
                 <tr>
-                  <th scope="row" class="text-start">Condition</th>
-                  <td>{{listing.condition }}</td>
+                  <th scope="row">Condition</th>
+                  <td>{{ listing.condition|capfirst }}</td>
                 </tr>
                 <tr>
-                  <th scope="row" class="text-start">Category</th>
-                  <td>{{listing.category }}</td>
+                  <th scope="row">Stock</th>
+                  <td>{{ listing.stock }}</td>
                 </tr>
                 <tr>
-                  <th scope="row" class="text-start">Color</th>
-                  <td>{{listing.color }}</td>
+                  <th scope="row">Category</th>
+                  <td>{{ listing.category|default:"Not categorized" }}</td>
                 </tr>
                 <tr>
-                  <th scope="row" class="text-start">Price</th>
-                  <td>Rs {{listing.price|capfirst }}</td>
+                  <th scope="row">Color</th>
+                  <td>{{ listing.color|capfirst }}</td>
                 </tr>
+                <tr>
+                  <th scope="row">Price</th>
+                  <td>Rs {{ listing.price|floatformat:2 }}</td>
+                </tr>
+                {% if listing.discount %}
+                <tr>
+                  <th scope="row">Discount</th>
+                  <td>Rs {{ listing.discount|floatformat:2 }}</td>
+                </tr>
+                {% endif %}
               </tbody>
             </table>
           </div>
         </div>
+
+        <!-- Location Section -->
         <div class="col-lg-4">
           <div class="card mb-4 rounded-3 shadow-sm">
             <div class="card-header py-3">
@@ -76,13 +87,22 @@
             <div class="card-body">
               <ul class="list-unstyled mt-3 mb-4">
                 <li>
-                  {{ listing.location.city }}, {{listing.location.state }},
+                  {{ listing.location.city }}, {{ listing.location.state }},
                   {{listing.location.zip_code }}
                 </li>
               </ul>
+
+              {% comment %}
               <button class="w-100 btn btn-lg btn-outline-primary my-3">
-                {{listing.seller.phone_number}}
+                {{ listing.seller.phone_number|default:"Contact seller" }}
               </button>
+              {% endcomment %}
+              <a
+                href="tel:{{ listing.seller.phone_number }}"
+                class="w-100 btn btn-lg btn-outline-primary my-3"
+              >
+                {{ listing.seller.phone_number|default:"Contact seller" }}
+              </a>
               <button
                 id="sendEmail"
                 class="w-100 btn btn-lg btn-outline-primary"
@@ -94,6 +114,8 @@
         </div>
       </div>
     </div>
+
+    <!-- Description Section -->
     <div class="container px-4 py-5">
       <div class="row g-4 py-5">
         <div class="col d-flex align-items-start">
@@ -106,6 +128,8 @@
     </div>
   </div>
 </main>
+
+<!-- Email Sending AJAX Script -->
 <script>
   $("#sendEmail").click(function () {
     $.ajax({
@@ -113,13 +137,14 @@
       url: "{% url 'inquire_listing' id=listing.id %}",
       data: { csrfmiddlewaretoken: "{{ csrf_token }}" },
       dataType: "json",
-      success: function (r) {
+      success: function (response) {
         alert("Email sent successfully!");
       },
       error: function (rs, e) {
-        alert(rs.info);
+        alert("There was an issue sending the email.");
       },
     });
   });
 </script>
+
 {% endblock %}

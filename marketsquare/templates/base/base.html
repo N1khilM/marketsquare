@@ -65,11 +65,15 @@
                 >Profile</a
               >
             </li>
+
             {%if request.user.is_superuser%}
             <li>
               <a href="{% url 'adminpanel' %}" class="nav-link px-2 text-white">
                 Quick Stats
               </a>
+            </li>
+            <li>
+              <a href="/admin/" class="button admin-button">Master!</a>
             </li>
             {%endif%}
           </ul>
