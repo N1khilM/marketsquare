@@ -19,8 +19,20 @@ class ListingForm(forms.ModelForm):
         ('clothing', 'Clothing'),
         ('furniture', 'Furniture'),
         ('accessories', 'Accessories'),
+        ('smartphones', 'Smartphones'),
+        ('shoes', 'Shoes'),
+        ('gaming console', 'Gaming Console'),
+        ('television', 'Television'),
+        ('laptops', 'Laptops'),
+        ('watches', 'Watches'),
+        ('furniture', 'Furniture'),
         ('footwear', 'Footwear'),
+        ('books', 'Books'),
+        ('musical instruments', 'Musical Instruments'),
+        ('sports equipment', 'Sports Equipment'),
+        ('home appliances', 'Home Appliances'),
         ('others','Others'),
+
     ]
 
         widgets = {

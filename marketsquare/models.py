@@ -13,13 +13,26 @@ class Listing(models.Model):
         ('new', 'New'),
         ('used', 'Used'),
     ]
+    
     CATEGORY_CHOICES = [
         ('electronics', 'Electronics'),
         ('clothing', 'Clothing'),
         ('furniture', 'Furniture'),
         ('accessories', 'Accessories'),
+        ('smartphones', 'Smartphones'),
+        ('shoes', 'Shoes'),
+        ('gaming console', 'Gaming Console'),
+        ('television', 'Television'),
+        ('laptops', 'Laptops'),
+        ('watches', 'Watches'),
+        ('furniture', 'Furniture'),
         ('footwear', 'Footwear'),
+        ('books', 'Books'),
+        ('musical instruments', 'Musical Instruments'),
+        ('sports equipment', 'Sports Equipment'),
+        ('home appliances', 'Home Appliances'),
         ('others','Others'),
+
     ]
     
     STATUS_CHOICES = [
@@ -33,7 +46,7 @@ class Listing(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     seller = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    title = models.CharField(max_length=24)  # General product type (e.g., electronics, clothing)
+    title = models.CharField(max_length=50)  # General product type (e.g., electronics, clothing)
     brand = models.CharField(max_length=24, null=True)  # Optional, remove if not applicable
     model = models.CharField(max_length=64,)  # Product model name
     description = models.TextField()  # Detailed product description
