@@ -46,7 +46,7 @@ class Listing(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     seller = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    title = models.CharField(max_length=50)  # General product type (e.g., electronics, clothing)
+    title = models.CharField(max_length=60)  # General product type (e.g., electronics, clothing)
     brand = models.CharField(max_length=24, null=True)  # Optional, remove if not applicable
     model = models.CharField(max_length=64,)  # Product model name
     description = models.TextField()  # Detailed product description
