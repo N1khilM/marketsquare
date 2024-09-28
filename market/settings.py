@@ -208,6 +208,9 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 
 
+ADMIN_EMAILS=[
+    'nikhilkingh008@gmail.com',
+]
 
 # admin
 ADMIN_SITE = 'admin/'

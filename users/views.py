@@ -196,3 +196,59 @@ class ProfileView(View):
                                                       'location_form': location_form,
                                                       'user_listings': user_listings,
                                                       'user_liked_listings': user_liked_listings, })
+    
+# account deletion
+from django.core.mail import send_mail
+from django.contrib.auth import logout
+from django.shortcuts import redirect, render
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.conf import settings
+from .models import User
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        password = request.POST.get('password', '')
+        reason = request.POST.get('reason', '').strip()  # Get and trim the reason
+
+        user = authenticate(username=user.username, password=password)
+
+        if user is not None:
+            # Check if a reason is provided
+            if reason:
+                # Send email to admin with the user's reason for leaving
+                send_mail(
+                    subject=f"Account Deletion Request: {user.username}",
+                    message = (
+                        f"Dear Admin,\n\n"
+                        f"We regret to inform you that user {user.username} (Email: {user.email}) has requested to delete their account.\n"
+                        f"This action has been successfully completed.\n"
+                        f"Reason for leaving: {reason if reason else 'No reason provided.'}\n\n"
+                        f"Best Regards,\n"
+                        f"Marketsquare Team"
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=settings.ADMIN_EMAILS,  # You can set this in settings.py
+                    fail_silently=False,
+                )
+
+            # Log the user out and delete their account
+            logout(request)
+            user.delete()
+
+            # Show a success message and redirect the user
+            messages.success(request, "Your account has been deleted. We're sorry to see you go!")
+            return redirect('home')  # Redirect to home or a goodbye page
+        else:
+            messages.error(request, "Invalid password. Please try again.")
+            return redirect('delete_account_confirm')
+    return render(request, 'views/deleteaccount/delete_account.html')
+
+
+def account_deleted(request):
+    return render(request, 'views/deleteaccount/account_deleted.html')
+
+def delete_account_confirm(request):
+    return render(request, 'views/deleteaccount/delete_account_confirm.html')

@@ -72,3 +72,11 @@ class CustomUserCreationForm(UserCreationForm):
 # otp
 class OTPForm(forms.Form):
     otp = forms.CharField(max_length=6, label="Enter the 6-digit OTP")
+
+# password reset
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
+
+class CustomPasswordResetView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'views/password_reset_form.html'
+    success_message = "An email has been sent with instructions to reset your password."

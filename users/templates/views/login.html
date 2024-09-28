@@ -13,7 +13,13 @@
       <h2 class="text-dark">Marketsquare</h2>
       {% csrf_token %} {{ login_form|crispy }}
       <button class="w-100 btn btn-lg btn-danger" type="submit">Sign In</button>
-
+      <div class="mt-3">
+        <a href="{% url 'register' %}" class="btn btn-link">Don't have an account? Sign up</a>
+      </div>
+            <!-- Reset Password Link -->
+      <div class="mt-3">
+        <a href="{% url 'password_reset' %}" class="btn btn-link">Forgot your password?</a>
+      </div>
       <p class="mt-5 mb-3 text-muted">Copyright © 2024 Marketsquare</p>
     </form>
   </main>
