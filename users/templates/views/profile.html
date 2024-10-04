@@ -33,7 +33,9 @@
                     </div>
                 </div>
             </div>
+            <div class="text-center mb-5">
             <button class="btn btn-lg btn-danger" type="submit">Save Changes</button>
+            </div>
         </form>
 
         <!-- User Listings -->
@@ -79,14 +81,24 @@
         </div>
 
         <!-- Account Deletion Section -->
+        {% if not user.is_superuser %}  <!-- Check if user is not an admin -->
         <div class="text-center mb-5">
             <h2 class="mb-3" style="color: black; font-weight: bold;">Account Deletion</h2>
             <p class="text-danger">Are you sure you want to delete your account? This action is irreversible and will permanently delete all your data.</p>
-            <form action="{% url 'delete_account_confirm' %}" method="post">
-                {% csrf_token %}
-                <button class="btn btn-lg btn-danger" type="submit">Delete My Account</button>
-            </form>
+            <!-- Using Flexbox to Align Right -->
+            <div class="d-flex justify-content-end">
+                <form action="{% url 'delete_account_confirm' %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-lg btn-danger" type="submit">Delete My Account</button>
+                </form>
+            </div>
         </div>
+        {% else %}
+        <div class="text-center mb-5">
+            <h2 class="mb-3" style="color: black; font-weight: bold;">Account Deletion Restricted</h2>
+            <p class="text-muted">As an admin, you cannot delete your own account. Please contact another admin for assistance.</p>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
