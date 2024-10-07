@@ -11,15 +11,18 @@ class ListingForm(forms.ModelForm):
         model = Listing
         fields = (
             'title', 'brand', 'model', 'description', 'price', 'discount', 
-            'color', 'condition', 'stock', 'category', 'image'
+            'color', 'condition', 'stock','status', 'category', 'image'
         )
+        STATUS_CHOICES = [
+    ('active', 'Active'),
+    ('inactive', 'Inactive'),
+    ('sold', 'Sold'),
+]
 
         CATEGORY_CHOICES = [
         ('electronics', 'Electronics'),
         ('clothing', 'Clothing'),
         ('furniture', 'Furniture'),
-        ('accessories', 'Accessories'),
-        ('smartphones', 'Smartphones'),
         ('shoes', 'Shoes'),
         ('gaming console', 'Gaming Console'),
         ('television', 'Television'),
@@ -27,10 +30,6 @@ class ListingForm(forms.ModelForm):
         ('watches', 'Watches'),
         ('furniture', 'Furniture'),
         ('footwear', 'Footwear'),
-        ('books', 'Books'),
-        ('musical instruments', 'Musical Instruments'),
-        ('sports equipment', 'Sports Equipment'),
-        ('home appliances', 'Home Appliances'),
         ('others','Others'),
 
     ]
@@ -48,6 +47,8 @@ class ListingForm(forms.ModelForm):
             # 'category': forms.Select(attrs={'class': 'form-select'}),  
             'category': forms.Select(choices=CATEGORY_CHOICES, attrs={'class': 'form-select'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'status': forms.Select(choices=Listing.STATUS_CHOICES, attrs={'class': 'form-select', 'placeholder': 'Select Status'}),  
+
         }
 
     def clean_title(self):

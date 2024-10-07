@@ -9,6 +9,7 @@ class ListingFilter(django_filters.FilterSet):
         model = Listing
         fields = {
             'title': ['icontains'],
+            'category': ['exact'],
         #     'brand': ['exact'],
         #     'model': ['icontains'],
             'color': ['exact'],

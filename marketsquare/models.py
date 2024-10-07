@@ -18,8 +18,6 @@ class Listing(models.Model):
         ('electronics', 'Electronics'),
         ('clothing', 'Clothing'),
         ('furniture', 'Furniture'),
-        ('accessories', 'Accessories'),
-        ('smartphones', 'Smartphones'),
         ('shoes', 'Shoes'),
         ('gaming console', 'Gaming Console'),
         ('television', 'Television'),
@@ -27,10 +25,6 @@ class Listing(models.Model):
         ('watches', 'Watches'),
         ('furniture', 'Furniture'),
         ('footwear', 'Footwear'),
-        ('books', 'Books'),
-        ('musical instruments', 'Musical Instruments'),
-        ('sports equipment', 'Sports Equipment'),
-        ('home appliances', 'Home Appliances'),
         ('others','Others'),
 
     ]
